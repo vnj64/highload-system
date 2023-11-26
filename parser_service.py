@@ -9,18 +9,21 @@ def parse_data_and_send_to_queue(url):
 
     person_name = soup.find('h1').get_text().strip()
     html_code = str(soup)
+    print(html_code)
 
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
     channel.queue_declare(queue='parsed_data_queue')
 
-    message = f"{url}\n{person_name}\n{html_code}"
+    html_code_bytes = html_code.encode('utf-8')
+    message = f"{url}\n{person_name}\n{html_code_bytes}"
     channel.basic_publish(exchange='', routing_key='parsed_data_queue', body=message)
 
     print(f"Data for {url} sent to the queue")
 
     connection.close()
+
 
 
 if __name__ == "__main__":
