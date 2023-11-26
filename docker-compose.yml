@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  cassandra:
+    image: cassandra
+    ports:
+      - "9042:9042"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
